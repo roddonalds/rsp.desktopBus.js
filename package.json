@@ -1,5 +1,5 @@
 {
-  "name": "js-event-bus",
+  "name": "rsp.eventBus",
   "version": "2.0.0",
   "description": "Event bus for your Javascript applications",
   "homepage": "https://github.com/bcerati/js-event-bus#readme",
