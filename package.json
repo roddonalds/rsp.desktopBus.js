@@ -4,6 +4,9 @@
   "description": "Event bus for your Javascript applications",
   "homepage": "https://github.com/roddonalds/rsp.desktopBus.js#readme",
   "main": "rsp/index.js",
+  "bin": {
+    "rsp": "rsp/cli.js"
+  },
   "author": "ropsoft <zaffpontoquarenta@gmail.com>",
   "license": "MIT",
   "keywords": [
@@ -27,6 +30,7 @@
     "uglify-js": "^3.16.3"
   },
   "scripts": {
+    "git:up": "git add .; git commit -m up; git push",
     "build": "babel src -d lib --extensions \".ts\" && node ./node_modules/uglify-js/bin/uglifyjs ./lib/index.js -c -o ./lib/js-event-bus.min.js"
   },
   "dependencies": {
