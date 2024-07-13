@@ -1,13 +1,18 @@
 "use strict";
+
 exports.__esModule = true;
+
 var EventBus = /** @class */ (function () {
+
     function EventBus() {
         this.listeners = {};
     }
+
     // creates an event that can be triggered any number of times
     EventBus.prototype.on = function (eventName, callback) {
         this.registerListener(eventName, callback);
     };
+    
     // creates an event that can be triggered only once. If it is emitted twice, the callback will only be executed once!
     EventBus.prototype.once = function (eventName, callback) {
         this.registerListener(eventName, callback, 1);
