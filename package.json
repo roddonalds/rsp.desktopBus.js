@@ -1,11 +1,11 @@
 {
-  "name": "rsp.desktopBus",
+  "name": "rsp.desktopSocket",
   "version": "2.0.0",
   "description": "Event bus for your Javascript applications",
-  "homepage": "https://github.com/roddonalds/rsp.desktopBus.js#readme",
-  "main": "rsp/index.js",
+  "homepage": "https://github.com/roddonalds/rsp.desktopSocket.js#readme",
+  "main": "src/index.js",
   "bin": {
-    "rsp": "rsp/cli.js"
+    "rsp.desktopSocket": "src/cli.js"
   },
   "author": "ropsoft <zaffpontoquarenta@gmail.com>",
   "license": "MIT",
@@ -17,25 +17,29 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/roddonalds/rsp.desktopBus.js.git"
+    "url": "https://github.com/roddonalds/rsp.desktopSocket.js.git"
   },
   "devDependencies": {
-    "@babel/cli": "^7.18.10",
-    "@babel/core": "^7.18.10",
-    "@babel/preset-env": "^7.18.10",
-    "@babel/preset-typescript": "^7.18.6",
     "es-check": "^7.0.0",
     "prettier": "^2.7.1",
     "release-it": "^15.3.0",
     "uglify-js": "^3.16.3"
   },
   "scripts": {
+    "dev": "NODE_ENV=development npm run serve && electron ./example/main.js",
+    "rel": "NODE_ENV=production npm run serve && electron ./example/main.js",
+    "serve": "nodemon ./example/dsocker/dsocket.server.js",
+    "dev:su": "sudo electron ./example/main.js --no-sandbox",
+    "set:ip": "sudo ip address add dev lo 14.21.7.1",
     "git:up": "git add .; git commit -m up; git push",
     "build": "babel src -d lib --extensions \".ts\" && node ./node_modules/uglify-js/bin/uglifyjs ./lib/index.js -c -o ./lib/js-event-bus.min.js"
   },
   "dependencies": {
     "commander": "^12.1.0",
-    "config": "^3.3.12",
-    "node-json-db": "^2.3.0"
+    "shelljs": "^0.8.5",
+    "ws": "^8.18.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.8"
   }
 }

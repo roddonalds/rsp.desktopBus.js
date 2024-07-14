@@ -9,7 +9,7 @@ if (!process.argv.slice(2).length) {
 
 program
   .version('1.0.0')
-  .description('CLI for interfacing with the desktopBus API');
+  .description('CLI for interfacing with the desktopSocket API');
 
 // Command to handle interface with optional second and third arguments
 program

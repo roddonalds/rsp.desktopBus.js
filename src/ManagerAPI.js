@@ -8,7 +8,7 @@ function cli(interfaceName, secondArgument, thirArgument) {
         return;
     }
 
-    let iface = global.rsp.desktopBus.interfaces[interfaceName];
+    let iface = global.rsp.desktopSocket.interfaces[interfaceName];
     
     console.debug('Fetched interface:', iface);
 
@@ -102,7 +102,7 @@ function getAllInterfaces() {
 
     console.debug('getAllInterfaces function called');
 
-    let interfaces = global.rsp.desktopBus.interfaces;
+    let interfaces = global.rsp.desktopSocket.interfaces;
 
     console.debug('Fetched all interfaces:', interfaces);
 

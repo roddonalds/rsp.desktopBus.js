@@ -2,6 +2,17 @@
 
 Made for rsp (OS) - my Operational System Project
 
+## What is does
+
+Service that run interfaces of IPC 
+  ... between system events and desktop running applications
+    - signaling (+ with or without data payload)
+    - service daemon runner for signaling on their handlers 
+      ,,,only!
+
+  no methods - the signals payloads must be enough for the app client resolve themself
+  no options - why..?!
+
 ## Classes (Prototypes)
 
 ### - Server
@@ -18,6 +29,8 @@ Made for rsp (OS) - my Operational System Project
   Accesible thoughout: 
     - "rsp.desktopBus|Client.js" as npm module (node.js) 
 
+  client.request('signal-name')
+  
 ### - Manager
 
   Class auto instantied and initialized (from on the system's initd system)
