@@ -1,89 +1,78 @@
 const WebSocket = require('ws');
 const { Worker } = require('worker_threads');
 
-function Server (appName) {
-    
+function Server(appName) {
+
     this.port = 7777;
+    this.services = {};
     this.appName = appName;
     this.prefix = `rsp.dsocket.io/${appName}`;
-    this.wss = new WebSocket.Server({ port: this.port});
-
-    this.workers = {};
-    this.signals = {};
-    this.connections = [];
+    this.wss = new WebSocket.Server({ port: this.port });
 
     this.wss.on('connection', (ws) => {
 
-        this.connections.push({
-            ws,
-            prefix: this.prefix
-        });
+        this.connections.push({ ws, prefix: this.prefix });
 
         ws.on('message', (message) => {
-           
+            /// exxaminar this. aqui
+            // examinar message aqui
+            console.debug('this', this);
+            console.debug('message:', message)
+
             const data = JSON.parse(message);
             const { action, prefix, signal, payload } = data;
             
+            if (this.signals[signal]) {
+                this.signals[signal](payload, ws);
+            }
         });
 
         ws.on('close', () => {
-            this.workers.forEach((clients, prefix) => {
-                this.workers.set(prefix, clients.filter(client => client !== ws));
+            this.connections = this.connections.filter(connection => connection.ws !== ws);
+            Object.keys(this.services).forEach((key) => {
+                this.services[key] = this.services[key].filter(workerWs => workerWs !== ws);
             });
         });
     });
 }
 
-Server.prototype.emit = function (signal, payload) {
-    
+Server.prototype.emit = function(signal, payload) {
+
+    console.log('Running dserver.emit()')
+
     const addr = `${this.prefix}.${signal}`;
 
-    this.workers.forEach((clients) => {
-        clients.forEach((client) => {
-            client.send(JSON.stringify({ signal: addr, payload }));
-        });
+    console.debug('addr',  addr);
+
+    this.connections.forEach((connection) => {
+        connection.ws.send(JSON.stringify({ signal: addr, payload }));
     });
 }
 
-Server.prototype.worker = function (name, scriptPath, data) {
+Server.prototype.service = function(options) {
 
-    console.debug(`Registering a worker: ${name}`)
-    console.debug(`On script path: ${scriptPath}`)
-    console.debug('worker:', this.workers[name]);
+    const name = options.name;
+    const data = options.data;
+    const script = options.script;
 
-    this.workers[name] = new Worker(scriptPath, {  name, ...data  })
+    console.debug(`Registering a service: ${name}`);
+    console.debug(`On script path: ${script}`);
+    console.debug('service:', name);
 
-};
+    this.services[name] = new Worker(script, { workerData: data });
+    this.services[name].on('message', (result) => {
 
-Server.prototype.signal = function (name, description, handler) {
-
-    console.log('name', name)
-    console.log('description', description)
-    console.log('handler', handler)
-
-    this.signals[name] = handler;
-
-    // Assuming you have a method to handle signals
-};
-
-Server.prototype.execute = function (signal, handler) {
-
-    const worker = new Worker('./workers/worker.js', { my: 'payload', da: 'ta' });
-    
-    worker.on('message', result => {
-        ws.send(JSON.stringify({ signal: 'executionResult', payload: result }));
     });
-    
-    worker.on('error', error => {
-        ws.send(JSON.stringify({ signal: 'executionError', payload: error.message }));
+
+    this.services[name].on('error', (error) => {
+        this.emit(`${name}Error`, error.message);
     });
-    
-    worker.on('exit', code => {
+
+    this.services[name].on('exit', (code) => {
         if (code !== 0) {
-            ws.send(JSON.stringify({ signal: 'executionError', payload: `Worker stopped with exit code ${code}` }));
+            this.emit(`${name}Error`, `Worker stopped with exit code ${code}`);
         }
     });
- 
 }
 
 module.exports = Server;

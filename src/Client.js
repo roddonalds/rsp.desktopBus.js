@@ -15,19 +15,18 @@ function Client(appName, appWindow) {
     };
 
     this.ws.onmessage = (event) => {
+        console.debug('\n\n this.ws.onmessage \n\n',  this.ws.onmessage)
         const data = JSON.parse(event.data);
         const { signal, payload } = data;
-        this.appWindow.dispatchEvent(new CustomEvent(signal, { detail: payload }));
+        console.debug('data', data);
+        console.debug('signal', signal);
+        console.debug('payload', payload, '\n\n');
     };
 }
 
 Client.prototype.emit = function (signal, payload) {
     const addr = `${this.prefix}.${signal}`;
     this.ws.send(JSON.stringify({ action: 'emit', prefix: this.prefix, signal: addr, payload }));
-};
-
-Client.prototype.execute = function (payload) {
-    this.ws.send(JSON.stringify({ action: 'execute', prefix: this.prefix, payload }));
 };
 
 Client.prototype.listen = function (signal, handler) {

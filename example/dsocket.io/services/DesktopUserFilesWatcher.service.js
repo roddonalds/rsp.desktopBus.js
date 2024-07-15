@@ -24,7 +24,7 @@ module.exports = executeScript;
 
 /*module.exports = function (name, paths, signalize) {
 
-  const ename = `${name}.dsocket.worker.${name}`;
+  const ename = `${name}.dsocket.io.worker.${name}`;
   
   console.log('this initializing:', name);
   console.debug('ename:', ename);
@@ -64,6 +64,6 @@ module.exports = executeScript;
   
     })
 
-  console.log('dsocket worker initialized!');
+  console.log('dsocket.io worker initialized!');
 
 }*/

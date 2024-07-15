@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Text Editor
+Comment=Edit text files
+Exec=gedit %U
+Icon=text-editor
+Terminal=false
+Type=Application
+Categories=Utility;TextEditor;
+MimeType=text/plain;
